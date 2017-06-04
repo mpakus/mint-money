@@ -1,4 +1,6 @@
 # coding: utf-8
+# frozen_string_literal: true
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'mint/money/version'
@@ -10,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['mrak69@gmail.com']
 
   spec.summary       = 'Manage money with Mint::Money'
-  spec.description   = 'Ruby gem to perform currency conversion and arithmetics with different currencies'
+  spec.description   = File.read(File.expand_path('../README.md', __FILE__))
   spec.homepage      = ''
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
@@ -24,4 +26,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rubocop', '~> 0.49'
+  spec.add_development_dependency 'pry'
 end

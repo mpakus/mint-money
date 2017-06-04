@@ -1,7 +1,4 @@
-require "mint/money/version"
+# frozen_string_literal: true
 
-module Mint
-  module Money
-    # Your code goes here...
-  end
-end
+require File.dirname(__FILE__) + '/money/version'
+require File.dirname(__FILE__) + '/money/money'

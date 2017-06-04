@@ -1,5 +1,7 @@
 # Mint::Money
 
+[![CircleCI](https://circleci.com/gh/mpakus/mint-money.svg?style=svg)](https://circleci.com/gh/mpakus/mint-money)
+
 Mint::Money perform currency conversion and arithmetics with different currencies.
 
 ## Installation

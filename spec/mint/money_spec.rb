@@ -39,7 +39,8 @@ RSpec.describe Mint::Money do
     it { expect(fifty_eur_in_usd == fifty_eur).to be_truthy }
 
     it { expect(twenty_dollars > Mint::Money.new(5, :USD)).to be_truthy }
-    it { expect(twenty_dollars < fifty_eur).to be_trythy }
+    it { expect(twenty_dollars < fifty_eur).to be_truthy }
+    it { expect(fifty_eur > twenty_dollars).to be_truthy }
   end
 
   context 'with arguments errors' do

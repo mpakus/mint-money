@@ -65,6 +65,7 @@ module Mint
     def ==(other)
       eql?(other)
     end
+    # @return [Boolean]
     def eql?(other)
       return self.inspect == other if other.class == String
 
@@ -87,6 +88,13 @@ module Mint
     def * mult
       mult = self.class.new(mult, @currency_sym) unless mult.is_a? self.class
       self.class.new(amount * mult.amount, @currency_sym)
+    end
+
+    # Lower and bigger (sort, spaceship) operation
+    # @return [boolean]
+    def <=> other
+      other = self.class.new(other, @currency_sym) unless other.is_a? self.class
+      amount <=> other.amount
     end
 
     private

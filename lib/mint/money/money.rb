@@ -45,29 +45,36 @@ module Mint
       Mint::Currency.convert_to(self, currency, use_base)
     end
 
-    # Plus operation for same or exchangable Money
+    # Plus operation
     # @return [Mint::Money]
     def + other
-      other = self.class.new(other, @currency_sym) if other.class != Mint::Money
+      other = self.class.new(other, @currency_sym) unless other.is_a? self.class
       self.class.new(amount + cast_type(other).amount, @currency_sym)
     end
 
-    # Minus operation for same or exchangable Money
+    # Minus operation
     # @return [Mint::Money]
     def - other
-      other = self.class.new(other, @currency_sym) if other.class != Mint::Money
+      other = self.class.new(other, @currency_sym) unless other.is_a? self.class
       self.class.new(amount - cast_type(other).amount, @currency_sym)
     end
 
-    # Two Mint::Money objects are equal or one of the is String and looks like .inspect results
+    # Equal operation
+    # Two Mint::Money objects are equal or one of them is a String and looks like .inspect results
     # @return [Boolean]
     def ==(other)
       eql?(other)
     end
-
     def eql?(other)
       return self.inspect == other if other.class == String
       self.class == other.class && amount == other.amount
+    end
+
+    # Divide operation
+    # @return [Mint::Money]
+    def / divider
+      divider = self.class.new(divider, @currency_sym) unless divider.is_a? self.class
+      self.class.new(amount / divider.amount, @currency_sym)
     end
 
     private

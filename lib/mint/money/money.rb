@@ -10,6 +10,8 @@ require_relative './utils'
 module Mint
   # Money Management
   class Money
+    include Comparable
+
     attr_reader :value, :currency, :currency_sym
     alias amount value
 
@@ -37,14 +39,38 @@ module Mint
       format('%.2f', value.to_f)
     end
 
-    # --- Conversions ---
-
+    # Create new Mint::Money with amount converted to another currency
     # @return [Mint::Money]
     def convert_to(currency, use_base = false)
       Mint::Currency.convert_to(self, currency, use_base)
     end
 
+    # Add operation for same or exchangable Money
+    # @return [Mint::Money]
+    def + other
+      other = self.class.new(other, @currency_sym) if other.class != Mint::Money
+      self.class.new(amount + cast_type(other).amount, @currency_sym)
+    end
+
+    # Two Mint::Money objects are equal or one of the is String and looks like .inspect results
+    # @return [Boolean]
+    def ==(other)
+      eql?(other)
+    end
+
+    def eql?(other)
+      return self.inspect == other if other.class == String
+      self.class == other.class && amount == other.amount
+    end
+
     private
+
+    # Convert other Money to the same currency
+    # @return [Mint::Money]
+    def cast_type(other)
+      return Mint::Currency.convert_to(other, @currency_sym) if @currency_sym != other.currency_sym
+      other
+    end
 
     # @return [Symbol]
     def normalize_currency(currency = nil)

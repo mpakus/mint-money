@@ -16,8 +16,8 @@ module Mint
   end
 
   class WrongConversionError < ArgumentError
-    def initialize(obj, from, to)
-      super "Can't convert #{obj.inspect} from #{from} to #{to} without conversion rates"
+    def initialize(msg)
+      super "Can't convert #{msg} without conversion rates"
     end
   end
 end

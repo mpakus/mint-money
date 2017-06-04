@@ -23,10 +23,11 @@ RSpec.describe Mint::Money do
 
   context 'with different currency operations' do
     it { expect(fifty_eur + twenty_dollars).to eq '68.02 EUR' }
+    it { expect(fifty_eur + 5).to eq '55.00 EUR' }
     it { expect(fifty_eur - twenty_dollars).to eq '31.98 EUR' }
-    it { expect(fifty_eur + 5).to eq '55 EUR' }
-    it { (fifty_eur / 2).to eq '25 EUR' }
-    it { (twenty_dollars * 3).to eq '60 USD' }
+    it { expect(fifty_eur - 5).to eq '45.00 EUR' }
+    it { (fifty_eur / 2).to eq '25.00 EUR' }
+    it { (twenty_dollars * 3).to eq '60.00 USD' }
   end
 
   context 'with comparisons operations' do

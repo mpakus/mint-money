@@ -67,7 +67,12 @@ module Mint
     end
     def eql?(other)
       return self.inspect == other if other.class == String
-      self.class == other.class && amount == other.amount
+
+      # what if they are same class just different currencies
+      if other.is_a?(self.class) && currency_sym != other.currency_sym
+        other = cast_type(other)
+      end
+      self.class == other.class && amount == other.amount && currency_sym == other.currency_sym
     end
 
     # Divide operation

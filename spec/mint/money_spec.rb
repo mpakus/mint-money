@@ -3,6 +3,7 @@
 RSpec.describe Mint::Money do
   before { Mint::Money.conversion_rates(:EUR, USD: 1.11, BTC: 0.0047) }
   let!(:fifty_eur) { Mint::Money.new(50, :EUR) }
+  let!(:fifty_eur_in_usd) { fifty_eur.convert_to(:USD) }
   let!(:twenty_dollars) { Mint::Money.new(20, :USD) }
 
   context 'with initial object' do
@@ -34,7 +35,8 @@ RSpec.describe Mint::Money do
     it { expect(twenty_dollars == Mint::Money.new(20, :USD)).to be_truthy }
     it { expect(twenty_dollars == Mint::Money.new(30, :USD)).to be_falsey }
 
-    it { expect(fifty_eur == fifty_eur.convert_to(:USD)).to be_truthy }
+    it { expect(fifty_eur == fifty_eur_in_usd).to be_truthy }
+    it { expect(fifty_eur_in_usd == fifty_eur).to be_truthy }
 
     it { expect(twenty_dollars > Mint::Money.new(5, :USD)).to be_truthy }
     it { expect(twenty_dollars < fifty_eur).to be_trythy }

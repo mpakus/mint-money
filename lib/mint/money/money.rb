@@ -37,6 +37,13 @@ module Mint
       format('%.2f', value.to_f)
     end
 
+    # --- Conversions ---
+
+    # @return [Mint::Money]
+    def convert_to(currency, use_base = false)
+      Mint::Currency.convert_to(self, currency, use_base)
+    end
+
     private
 
     # @return [Symbol]

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative './utils'
+require_relative './exceptions'
 
 module Mint
   # Global Currencies state
@@ -24,6 +25,15 @@ module Mint
       # @return [Boolean]
       def valid?(currency)
         @rates.key?(currency)
+      end
+
+      # @return [Mint::Money]
+      def convert_to(money, currency, use_base = false)
+        currency_sym = Mint::Utils.to_key(currency)
+        raise WrongCurrencyError, currency unless Mint::Currency.valid?(currency_sym)
+        return money if money.currency_sym == currency_sym # if same currency
+        raise(WrongConversionError, money, money.currency_sym, currency_sym) if !use_base && @base != money.currency_sym
+        Mint::Money.new(money.amount * @rates[currency_sym], currency_sym)
       end
     end
   end

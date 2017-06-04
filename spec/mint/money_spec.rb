@@ -16,9 +16,9 @@ RSpec.describe Mint::Money do
   context 'with conversion' do
     subject { fifty_eur.convert_to('USD') }
 
-    it { expect(subject.amount).to eq 55 }
+    it { expect(subject.amount).to eq 55.50 }
     it { expect(subject.currency).to eq 'USD' }
-    it { expect(subject.inspect).to eq '55.00 USD' }
+    it { expect(subject.inspect).to eq '55.50 USD' }
   end
 
   context 'with different currency operations' do
@@ -42,5 +42,8 @@ RSpec.describe Mint::Money do
   end
 
   context 'with operations exception' do
+    describe '#convert_to' do
+      it { expect{fifty_eur.convert_to('THB') }.to  raise_error(Mint::WrongCurrencyError) }
+    end
   end
 end

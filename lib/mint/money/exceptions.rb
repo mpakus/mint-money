@@ -14,4 +14,10 @@ module Mint
       super "Wrong amount's type #{value.inspect}, should be Float, BigDecimal or Mint::Money"
     end
   end
+
+  class WrongConversionError < ArgumentError
+    def initialize(obj, from, to)
+      super "Can't convert #{obj.inspect} from #{from} to #{to} without conversion rates"
+    end
+  end
 end

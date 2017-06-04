@@ -77,6 +77,13 @@ module Mint
       self.class.new(amount / divider.amount, @currency_sym)
     end
 
+    # Multiplication operation
+    # @return [Mint::Money]
+    def * mult
+      mult = self.class.new(mult, @currency_sym) unless mult.is_a? self.class
+      self.class.new(amount * mult.amount, @currency_sym)
+    end
+
     private
 
     # Convert other Money to the same currency

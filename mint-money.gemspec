@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Manage money with Mint::Money'
   spec.description   = File.read(File.expand_path('../README.md', __FILE__))
-  spec.homepage      = ''
+  spec.homepage      = 'https://github.com/mpakus/mint-money'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})

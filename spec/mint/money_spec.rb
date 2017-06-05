@@ -55,7 +55,7 @@ RSpec.describe Mint::Money do
 
   context 'with exceptions' do
     describe '.new' do
-      it { expect{ Mint::Money.new(Mint::Currency, :USD) }.to raise_error(Mint::WrongMoneyError) }
+      it { expect { Mint::Money.new(Mint::Currency, :USD) }.to raise_error(Mint::WrongMoneyError) }
     end
     describe '#convert_to' do
       it { expect { fifty_eur.convert_to('THB') }.to raise_error(Mint::WrongCurrencyError) }

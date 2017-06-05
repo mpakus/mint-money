@@ -1,7 +1,5 @@
 # Mint::Money
 
-[![CircleCI](https://circleci.com/gh/mpakus/mint-money.svg?style=svg)](https://circleci.com/gh/mpakus/mint-money)
-
 Mint::Money perform currency conversion and arithmetics with different currencies.
 
 ## Installation
@@ -85,3 +83,6 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/mpakus/mint-money.
+
+[![CircleCI](https://circleci.com/gh/mpakus/mint-money.svg?style=svg)](https://circleci.com/gh/mpakus/mint-money)
+

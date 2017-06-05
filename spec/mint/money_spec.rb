@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Mint::Money do
-  before { Mint::Money.conversion_rates(:EUR, USD: 1.11, BTC: 0.0047) }
+  before do
+    Mint::Money.round_precisions(BTC: 8)
+    Mint::Money.conversion_rates(:EUR, USD: 1.11, BTC: 0.00044)
+  end
   let!(:fifty_eur) { Mint::Money.new(50, :EUR) }
   let!(:fifty_eur_in_usd) { fifty_eur.convert_to(:USD) }
   let!(:twenty_dollars) { Mint::Money.new(20, :USD) }
@@ -43,12 +46,20 @@ RSpec.describe Mint::Money do
     it { expect(fifty_eur > twenty_dollars).to be_truthy }
   end
 
-  context 'with arguments errors' do
+  context 'with different rounding precisions' do
+    it { expect(Mint::Money.new(10, :EUR).convert_to(:BTC)).to eq   '0.00440000 BTC' }
+    it { expect(Mint::Money.new(100, :EUR).convert_to(:BTC)).to eq  '0.04400000 BTC' }
+    it { expect(Mint::Money.new(1000, :EUR).convert_to(:BTC)).to eq '0.44000000 BTC' }
+    it { expect(Mint::Money.new(1000, :BTC).convert_to(:EUR)).to eq '2272727.27 EUR' }
   end
 
-  context 'with operations exception' do
+  context 'with exceptions' do
+    describe '.new' do
+      it { expect{ Mint::Money.new(Mint::Currency, :USD) }.to raise_error(Mint::WrongMoneyError) }
+    end
     describe '#convert_to' do
-      it { expect{fifty_eur.convert_to('THB') }.to  raise_error(Mint::WrongCurrencyError) }
+      it { expect { fifty_eur.convert_to('THB') }.to raise_error(Mint::WrongCurrencyError) }
+      it { expect { twenty_dollars.convert_to('BTC') }.to raise_error(Mint::WrongConversionError) }
     end
   end
 end

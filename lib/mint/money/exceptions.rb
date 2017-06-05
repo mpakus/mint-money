@@ -15,6 +15,7 @@ module Mint
     end
   end
 
+  # When a conversion need to setup currency rate
   class WrongConversionError < ArgumentError
     def initialize(msg)
       super "Can't convert #{msg} without conversion rates"

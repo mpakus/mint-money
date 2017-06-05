@@ -8,26 +8,34 @@ require_relative './exceptions'
 require_relative './utils'
 
 module Mint
-  # Money Management
+  # Minty Money Management
+  #
+  # @author Renat Ibragimov <renat@aomega.co>
+  #
+  # @see https://github.com/mpakus/mint-money
   class Money
     include Comparable
 
     attr_reader :value, :currency, :currency_sym
     alias amount value
 
+    # @param value [Integer]
+    # @param currency [String,Symbol]
+    # @return [Mint::Money]
     def initialize(value = 0.00, currency = nil)
-      @value = Mint::Utils.to_amount(value)
       @currency_sym = normalize_currency(currency)
       @currency = currency.to_s.upcase
+      @value = Mint::Utils.to_amount(value, @currency_sym)
     end
 
     class << self
       extend Forwardable
       # Delegate .conversion_rates class method to Mint::Currency class
       def_delegator :'Mint::Currency', :conversion_rates
+      def_delegator :'Mint::Currency', :round_precisions
     end
 
-    # Dump value with currency name
+    # Returns formatted value and currency name
     # @return [String]
     def inspect
       "#{self} #{currency}"
@@ -36,10 +44,12 @@ module Mint
     # Auto/Stringify instance
     # @return [String]
     def to_s
-      format('%.2f', value.to_f)
+      Mint::Utils.to_format(value, currency_sym)
     end
 
     # Create new Mint::Money with amount converted to another currency
+    # @param currency [Symbol]
+    # @param use_base [Boolean]
     # @return [Mint::Money]
     def convert_to(currency, use_base = false)
       Mint::Currency.convert_to(self, currency, use_base)
@@ -47,14 +57,14 @@ module Mint
 
     # Plus operation
     # @return [Mint::Money]
-    def + other
+    def +(other)
       other = self.class.new(other, @currency_sym) unless other.is_a? self.class
       self.class.new(amount + cast_type(other).amount, @currency_sym)
     end
 
     # Minus operation
     # @return [Mint::Money]
-    def - other
+    def -(other)
       other = self.class.new(other, @currency_sym) unless other.is_a? self.class
       self.class.new(amount - cast_type(other).amount, @currency_sym)
     end
@@ -65,34 +75,34 @@ module Mint
     def ==(other)
       eql?(other)
     end
+
+    # rubocop:disable all
     # @return [Boolean]
     def eql?(other)
-      return self.inspect == other if other.class == String
-
+      return inspect == other if other.class == String
       # what if they are same class just different currencies
-      if other.is_a?(self.class) && currency_sym != other.currency_sym
-        other = cast_type(other)
-      end
+      other = cast_type(other) if other.is_a?(self.class) && currency_sym != other.currency_sym
       self.class == other.class && amount == other.amount && currency_sym == other.currency_sym
     end
+    # rubocop:enable all
 
     # Divide operation
     # @return [Mint::Money]
-    def / divider
-      divider = self.class.new(divider, @currency_sym) unless divider.is_a? self.class
-      self.class.new(amount / divider.amount, @currency_sym)
+    def /(other)
+      other = self.class.new(other, @currency_sym) unless other.is_a? self.class
+      self.class.new(amount / other.amount, @currency_sym)
     end
 
     # Multiplication operation
     # @return [Mint::Money]
-    def * mult
-      mult = self.class.new(mult, @currency_sym) unless mult.is_a? self.class
-      self.class.new(amount * mult.amount, @currency_sym)
+    def *(other)
+      other = self.class.new(other, @currency_sym) unless other.is_a? self.class
+      self.class.new(amount * other.amount, @currency_sym)
     end
 
     # Lower and bigger (sort, spaceship) operation
     # @return [boolean]
-    def <=> other
+    def <=>(other)
       other = self.class.new(other, @currency_sym) unless other.is_a? self.class
       amount <=> other.amount
     end
